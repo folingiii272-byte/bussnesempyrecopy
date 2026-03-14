@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BUSINESS EMPIRE: АВТОСОХРАНЕНИЕ 100МС</title>
+    <title>BUSINESS EMPIRE: СУПЕР СОХРАНЕНИЕ</title>
     <style>
         * {
             margin: 0;
@@ -459,7 +459,7 @@
             </div>
             <div class="header-buttons">
                 <div class="header-btn" onclick="forceSave()">💾</div>
-                <div class="header-btn" onclick="forceLoad()">📂</div>
+                <div class="header-btn" onclick="testSave()">🔍</div>
                 <div class="header-btn" onclick="toggleTheme()">🎨</div>
             </div>
         </div>
@@ -552,10 +552,6 @@
         let currentTheme = 'dark';
         let totalClicks = 0;
 
-        // Флаг для автосохранения
-        let lastSaveTime = Date.now();
-        let saveCounter = 0;
-
         // БИЗНЕСЫ
         let businesses = [
             { id: 0, name: 'Ларёк', icon: '🏪', baseIncome: 10, level: 0, cost: 500, manager: false },
@@ -621,8 +617,10 @@
             { id: 4, name: 'Нанять 3 менеджеров', requirement: 3, progress: 0, reward: 15, rewardType: 'crystals', completed: false }
         ];
 
-        // ФУНКЦИЯ АВТОСОХРАНЕНИЯ (каждые 100мс)
-        function autoSave() {
+        // ========== СУПЕР-НАДЁЖНОЕ СОХРАНЕНИЕ ==========
+        
+        // Сохраняем ВСЁ
+        function saveAllData() {
             try {
                 const saveData = {
                     balance: balance,
@@ -637,93 +635,155 @@
                     stocks: stocks,
                     properties: properties,
                     managers: managers,
-                    quests: quests
+                    quests: quests,
+                    version: "1.0",
+                    timestamp: Date.now()
                 };
                 
-                localStorage.setItem('businessEmpireSave', JSON.stringify(saveData));
-                saveCounter++;
+                // Пробуем разные способы сохранения
+                try {
+                    localStorage.setItem('businessEmpireSave', JSON.stringify(saveData));
+                } catch(e) {}
                 
-                // Показываем уведомление каждые 100 сохранений (примерно раз в 10 секунд)
-                if (saveCounter % 100 === 0) {
-                    console.log('Автосохранение:', saveCounter);
-                }
+                try {
+                    sessionStorage.setItem('businessEmpireSave', JSON.stringify(saveData));
+                } catch(e) {}
+                
+                // Пробуем сохранить в cookie (на всякий случай)
+                try {
+                    document.cookie = "businessEmpireSave=" + encodeURIComponent(JSON.stringify(saveData)) + "; path=/; max-age=31536000";
+                } catch(e) {}
+                
+                console.log('✅ Данные сохранены в', new Date().toLocaleTimeString());
+                return true;
             } catch (e) {
-                console.error('Ошибка автосохранения:', e);
+                console.error('❌ Ошибка сохранения:', e);
+                return false;
             }
         }
 
-        // ЗАПУСК АВТОСОХРАНЕНИЯ КАЖДЫЕ 100 МИЛЛИСЕКУНД
-        setInterval(autoSave, 100);
-
-        // ПРИНУДИТЕЛЬНОЕ СОХРАНЕНИЕ (кнопка)
-        function forceSave() {
-            autoSave();
-            showNotification('💾 Игра сохранена');
-        }
-
-        // ПРИНУДИТЕЛЬНАЯ ЗАГРУЗКА (кнопка)
-        function forceLoad() {
-            loadGame();
-        }
-
-        // ЗАГРУЗКА ПРИ СТАРТЕ
-        function loadGame() {
+        // Загружаем ВСЁ
+        function loadAllData() {
             try {
-                const saved = localStorage.getItem('businessEmpireSave');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    
+                let savedData = null;
+                
+                // Пробуем загрузить из localStorage
+                try {
+                    const data = localStorage.getItem('businessEmpireSave');
+                    if (data) savedData = JSON.parse(data);
+                } catch(e) {}
+                
+                // Если нет в localStorage, пробуем sessionStorage
+                if (!savedData) {
+                    try {
+                        const data = sessionStorage.getItem('businessEmpireSave');
+                        if (data) savedData = JSON.parse(data);
+                    } catch(e) {}
+                }
+                
+                // Если нет в sessionStorage, пробуем cookie
+                if (!savedData) {
+                    try {
+                        const cookies = document.cookie.split(';');
+                        for (let cookie of cookies) {
+                            const [name, value] = cookie.trim().split('=');
+                            if (name === 'businessEmpireSave') {
+                                savedData = JSON.parse(decodeURIComponent(value));
+                                break;
+                            }
+                        }
+                    } catch(e) {}
+                }
+                
+                if (savedData) {
                     // Основные ресурсы
-                    balance = data.balance || 1000;
-                    crystals = data.crystals || 0;
-                    energy = data.energy || 100;
-                    maxEnergy = data.maxEnergy || 100;
-                    level = data.level || 1;
-                    exp = data.exp || 0;
-                    expToNextLevel = data.expToNextLevel || 1000;
-                    totalClicks = data.totalClicks || 0;
+                    balance = savedData.balance || 1000;
+                    crystals = savedData.crystals || 0;
+                    energy = savedData.energy || 100;
+                    maxEnergy = savedData.maxEnergy || 100;
+                    level = savedData.level || 1;
+                    exp = savedData.exp || 0;
+                    expToNextLevel = savedData.expToNextLevel || 1000;
+                    totalClicks = savedData.totalClicks || 0;
                     
                     // Бизнесы
-                    if (data.businesses) {
-                        businesses = data.businesses;
+                    if (savedData.businesses) {
+                        businesses = savedData.businesses;
                     }
                     
                     // Акции
-                    if (data.stocks) {
-                        stocks = data.stocks;
-                        // Восстанавливаем oldPrice для корректного отображения изменений
+                    if (savedData.stocks) {
+                        stocks = savedData.stocks;
                         stocks.forEach(s => s.oldPrice = s.price);
                     }
                     
                     // Недвижимость
-                    if (data.properties) {
-                        properties = data.properties;
+                    if (savedData.properties) {
+                        properties = savedData.properties;
                     }
                     
                     // Менеджеры
-                    if (data.managers) {
-                        managers = data.managers;
+                    if (savedData.managers) {
+                        managers = savedData.managers;
                     }
                     
                     // Задания
-                    if (data.quests) {
-                        quests = data.quests;
+                    if (savedData.quests) {
+                        quests = savedData.quests;
                     }
                     
+                    console.log('✅ Данные загружены из', savedData.timestamp ? new Date(savedData.timestamp).toLocaleTimeString() : 'неизвестно');
                     showNotification('📂 Игра загружена');
-                    updateUI();
-                    renderAll();
                     return true;
                 } else {
+                    console.log('🆕 Нет сохранений, начинаем новую игру');
                     showNotification('🆕 Новая игра');
                     return false;
                 }
             } catch (e) {
-                console.error('Ошибка загрузки:', e);
+                console.error('❌ Ошибка загрузки:', e);
                 showNotification('❌ Ошибка загрузки');
                 return false;
             }
         }
+
+        // АВТОСОХРАНЕНИЕ КАЖДУЮ СЕКУНДУ (более надёжно, чем 100мс)
+        setInterval(function() {
+            saveAllData();
+        }, 1000);
+
+        // Сохраняем при закрытии страницы
+        window.addEventListener('beforeunload', function() {
+            saveAllData();
+        });
+
+        // Сохраняем при сворачивании приложения (для мобильных)
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                saveAllData();
+            }
+        });
+
+        // Принудительное сохранение (кнопка 💾)
+        function forceSave() {
+            if (saveAllData()) {
+                showNotification('💾 Игра сохранена');
+            } else {
+                showNotification('❌ Ошибка сохранения');
+            }
+        }
+
+        // Тест сохранения (кнопка 🔍)
+        function testSave() {
+            if (loadAllData()) {
+                updateUI();
+                renderAll();
+                showNotification('📂 Загрузка выполнена');
+            }
+        }
+
+        // Загрузка при старте
+        loadAllData();
 
         function toggleTheme() {
             if (currentTheme === 'dark') {
@@ -1281,9 +1341,6 @@
                 });
             });
 
-            // Загружаем сохранение при старте
-            loadGame();
-            
             renderAll();
             updateUI();
 
@@ -1293,7 +1350,7 @@
 
         window.toggleTheme = toggleTheme;
         window.forceSave = forceSave;
-        window.forceLoad = forceLoad;
+        window.testSave = testSave;
         window.buyBusiness = buyBusiness;
         window.buyStock = buyStock;
         window.sellStock = sellStock;
