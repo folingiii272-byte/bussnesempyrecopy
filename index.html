@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BUSINESS EMPIRE: ПОЛНЫЙ ЭКРАН</title>
+    <title>BUSINESS EMPIRE: С СОХРАНЕНИЕМ</title>
     <style>
         * {
             margin: 0;
@@ -22,10 +22,10 @@
             left: 0;
             right: 0;
             bottom: 0;
+            background: #0e121f;
         }
 
         body {
-            background: linear-gradient(135deg, #0a0e17, #0d1220);
             font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -36,50 +36,48 @@
         .game-container {
             width: 100%;
             height: 100vh;
-            height: 100dvh; /* Для современных браузеров */
+            height: 100dvb;
             background: #0e121f;
             display: flex;
             flex-direction: column;
-            border: 2px solid #ffd966;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+            border: none;
             overflow: hidden;
             position: relative;
-            border-radius: 0; /* Убираем скругления для полного экрана */
         }
 
         .top-panel {
             background: #141a26;
             border-bottom: 2px solid #ffd966;
-            padding: 12px 16px;
+            padding: 8px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
+            width: 100%;
         }
 
         .player-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .player-avatar {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(145deg, #2a3f5a, #1a2a3a);
-            border-radius: 50%;
             border: 2px solid #ffd966;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             color: #ffd966;
             flex-shrink: 0;
         }
 
         .stats-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
         .stat-block {
@@ -89,14 +87,13 @@
 
         .stat-label {
             color: #8a9ab0;
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .stat-value {
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
         }
 
@@ -106,21 +103,20 @@
 
         .header-buttons {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .header-btn {
             background: #1e2c3a;
             border: 2px solid #ffd966;
             color: #e0e8f0;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 14px;
+            padding: 6px 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             touch-action: manipulation;
         }
 
@@ -133,35 +129,35 @@
             display: flex;
             flex: 1;
             overflow: hidden;
-            min-height: 0; /* Важно для flex-контейнера */
+            min-height: 0;
+            width: 100%;
         }
 
         .left-menu {
-            width: 80px;
+            width: 70px;
             background: #0c111c;
             border-right: 2px solid #ffd966;
-            padding: 12px 0;
+            padding: 10px 0;
             overflow-y: auto;
             flex-shrink: 0;
         }
 
         .menu-item {
-            padding: 12px 5px;
+            padding: 10px 3px;
             color: #a0b0c0;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             border-left: 3px solid transparent;
             cursor: pointer;
             text-align: center;
-            word-break: break-word;
         }
 
         .menu-item i {
-            font-size: 24px;
+            font-size: 22px;
         }
 
         .menu-item:active {
@@ -187,26 +183,25 @@
         .resources-bar {
             background: #141a26;
             border-bottom: 2px solid #ffd966;
-            padding: 8px;
+            padding: 5px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
+            gap: 3px;
             flex-shrink: 0;
         }
 
         .resource-card {
             background: #1e2a38;
-            border-radius: 8px;
-            padding: 6px 8px;
+            padding: 4px 6px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             border: 1px solid #ffd966;
             min-width: 0;
         }
 
         .resource-icon {
-            font-size: 18px;
+            font-size: 16px;
             flex-shrink: 0;
         }
 
@@ -219,14 +214,14 @@
 
         .resource-name {
             color: #8a9ab0;
-            font-size: 9px;
+            font-size: 7px;
             text-transform: uppercase;
             white-space: nowrap;
         }
 
         .resource-count {
             color: white;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
@@ -238,25 +233,25 @@
         }
 
         .section-header {
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-bottom: 2px solid #ffd966;
             flex-shrink: 0;
         }
 
         .section-title {
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .cards-grid {
-            padding: 12px;
+            padding: 8px;
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 8px;
             overflow-y: auto;
             height: 100%;
             min-height: 0;
@@ -273,9 +268,7 @@
         .business-card {
             background: #1a2330;
             border: 2px solid #ffd966;
-            border-radius: 12px;
-            padding: 14px;
-            transition: 0.2s;
+            padding: 10px;
         }
 
         .business-card:active {
@@ -285,64 +278,62 @@
         .card-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 6px;
         }
 
         .card-icon {
-            font-size: 36px;
+            font-size: 28px;
             flex-shrink: 0;
         }
 
         .card-title {
             color: white;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
         }
 
         .card-level {
             color: #ffd966;
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .profit-block {
             background: #101624;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 6px;
+            margin: 6px 0;
             text-align: center;
         }
 
         .profit-label {
             color: #8a9ab0;
-            font-size: 11px;
+            font-size: 9px;
         }
 
         .profit-value {
             color: #4caf50;
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 800;
         }
 
         .card-stats {
             display: flex;
             justify-content: space-between;
-            margin: 8px 0;
+            margin: 5px 0;
             color: #a0b0c0;
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .card-price {
             color: #ffd966;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
         }
 
         .progress-bar {
             background: #101624;
-            height: 6px;
-            border-radius: 3px;
-            margin: 10px 0;
+            height: 5px;
+            margin: 6px 0;
             overflow: hidden;
         }
 
@@ -354,18 +345,17 @@
 
         .button-group {
             display: flex;
-            gap: 6px;
-            margin-top: 8px;
+            gap: 4px;
+            margin-top: 5px;
         }
 
         .buy-button {
             background: #2a4a7a;
             border: none;
             color: white;
-            padding: 10px;
-            font-size: 13px;
+            padding: 8px;
+            font-size: 11px;
             font-weight: 700;
-            border-radius: 8px;
             cursor: pointer;
             flex: 1;
             border: 2px solid #ffd966;
@@ -388,8 +378,8 @@
         }
 
         .price-change {
-            font-size: 12px;
-            margin-top: 4px;
+            font-size: 10px;
+            margin-top: 3px;
         }
 
         .price-up {
@@ -404,32 +394,27 @@
             grid-column: 1/-1;
             background: #1a2330;
             border: 3px solid #ffd966;
-            border-radius: 16px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
         }
 
         .game-button {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            border-radius: 0;
             background: radial-gradient(circle at 30% 30%, #ffd966, #cc9c33);
-            border: 6px solid white;
-            font-size: 40px;
+            border: 5px solid white;
+            font-size: 32px;
             color: white;
             cursor: pointer;
-            margin: 8px;
-            box-shadow: 0 10px 0 #8b5e3c;
+            margin: 5px;
+            box-shadow: 0 8px 0 #8b5e3c;
             touch-action: manipulation;
         }
 
         .game-button:active {
-            transform: translateY(5px);
-            box-shadow: 0 5px 0 #8b5e3c;
-        }
-
-        .right-panel {
-            display: none;
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #8b5e3c;
         }
 
         .notification {
@@ -440,9 +425,8 @@
             background: #1e2c3a;
             border: 2px solid #ffd966;
             color: white;
-            padding: 15px 20px;
-            border-radius: 30px;
-            font-size: 15px;
+            padding: 12px 20px;
+            font-size: 14px;
             transform: translateY(-150%);
             transition: transform 0.3s;
             z-index: 1000;
@@ -454,40 +438,6 @@
 
         .notification.show {
             transform: translateY(0);
-        }
-
-        /* Для очень маленьких экранов */
-        @media (max-width: 350px) {
-            .stat-value {
-                font-size: 14px;
-            }
-            
-            .menu-item {
-                font-size: 11px;
-                padding: 8px 3px;
-            }
-            
-            .menu-item i {
-                font-size: 20px;
-            }
-            
-            .left-menu {
-                width: 70px;
-            }
-            
-            .game-button {
-                width: 100px;
-                height: 100px;
-                font-size: 32px;
-            }
-            
-            .card-icon {
-                font-size: 32px;
-            }
-            
-            .card-title {
-                font-size: 16px;
-            }
         }
     </style>
 </head>
@@ -503,11 +453,13 @@
                     </div>
                     <div class="stat-block">
                         <span class="stat-label">БАЛ</span>
-                        <span class="stat-value gold" id="balance">$1k</span>
+                        <span class="stat-value gold" id="balance">$1K</span>
                     </div>
                 </div>
             </div>
             <div class="header-buttons">
+                <div class="header-btn" onclick="saveGame()">💾</div>
+                <div class="header-btn" onclick="loadGame()">📂</div>
                 <div class="header-btn" onclick="toggleTheme()">🎨</div>
             </div>
         </div>
@@ -528,7 +480,7 @@
                         <div class="resource-icon">💰</div>
                         <div class="resource-info">
                             <span class="resource-name">БАЛ</span>
-                            <span class="resource-count gold" id="balanceDisplay">$1k</span>
+                            <span class="resource-count gold" id="balanceDisplay">$1K</span>
                         </div>
                     </div>
                     <div class="resource-card">
@@ -587,7 +539,7 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // Глобальные переменные
+        // Глобальные переменные с значениями по умолчанию
         let balance = 1000;
         let crystals = 0;
         let energy = 100;
@@ -598,6 +550,7 @@
         let incomePerSecond = 0;
         let currentSection = 'businesses';
         let currentTheme = 'dark';
+        let totalClicks = 0;
 
         // БИЗНЕСЫ
         let businesses = [
@@ -613,7 +566,7 @@
             { id: 9, name: 'Галактическая', icon: '👑', baseIncome: 19531250, level: 0, cost: 976562500, manager: false }
         ];
 
-        // АКЦИИ
+        // АКЦИИ (исправленный dividend)
         let stocks = [
             { id: 0, name: 'Apple', icon: '🍎', price: 180, oldPrice: 180, shares: 0, dividend: 0.05 },
             { id: 1, name: 'Microsoft', icon: '💻', price: 380, oldPrice: 380, shares: 0, dividend: 0.05 },
@@ -664,30 +617,103 @@
             { id: 4, name: 'Нанять 3 менеджеров', requirement: 3, progress: 0, reward: 15, rewardType: 'crystals', completed: false }
         ];
 
+        // ЗАГРУЗКА ПРИ СТАРТЕ
+        function loadGame() {
+            try {
+                const saved = localStorage.getItem('businessEmpireSave');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    
+                    // Основные ресурсы
+                    balance = data.balance || 1000;
+                    crystals = data.crystals || 0;
+                    energy = data.energy || 100;
+                    maxEnergy = data.maxEnergy || 100;
+                    level = data.level || 1;
+                    exp = data.exp || 0;
+                    expToNextLevel = data.expToNextLevel || 1000;
+                    totalClicks = data.totalClicks || 0;
+                    
+                    // Бизнесы
+                    if (data.businesses) {
+                        businesses = data.businesses;
+                    }
+                    
+                    // Акции
+                    if (data.stocks) {
+                        stocks = data.stocks;
+                    }
+                    
+                    // Недвижимость
+                    if (data.properties) {
+                        properties = data.properties;
+                    }
+                    
+                    // Менеджеры
+                    if (data.managers) {
+                        managers = data.managers;
+                    }
+                    
+                    // Задания
+                    if (data.quests) {
+                        quests = data.quests;
+                    }
+                    
+                    showNotification('📂 Игра загружена');
+                    updateUI();
+                    renderAll();
+                }
+            } catch (e) {
+                console.error('Ошибка загрузки:', e);
+            }
+        }
+
+        // СОХРАНЕНИЕ
+        function saveGame() {
+            try {
+                const saveData = {
+                    balance,
+                    crystals,
+                    energy,
+                    maxEnergy,
+                    level,
+                    exp,
+                    expToNextLevel,
+                    totalClicks,
+                    businesses,
+                    stocks,
+                    properties,
+                    managers,
+                    quests
+                };
+                
+                localStorage.setItem('businessEmpireSave', JSON.stringify(saveData));
+                showNotification('💾 Игра сохранена');
+            } catch (e) {
+                console.error('Ошибка сохранения:', e);
+                showNotification('❌ Ошибка сохранения');
+            }
+        }
+
+        // АВТОСОХРАНЕНИЕ КАЖДЫЕ 30 СЕКУНД
+        setInterval(saveGame, 30000);
+
         function toggleTheme() {
             if (currentTheme === 'dark') {
-                document.body.style.background = 'linear-gradient(135deg, #f0f0f0, #ffffff)';
+                document.body.style.background = '#f5f5f5';
                 document.getElementById('gameContainer').style.background = '#ffffff';
-                document.getElementById('gameContainer').style.borderColor = '#4a6a9a';
                 document.getElementById('topPanel').style.background = '#e0e0e0';
-                document.getElementById('topPanel').style.borderColor = '#4a6a9a';
                 document.getElementById('leftMenu').style.background = '#d0d0d0';
-                document.getElementById('leftMenu').style.borderColor = '#4a6a9a';
                 document.getElementById('contentPanel').style.background = '#f5f5f5';
                 document.getElementById('resourcesBar').style.background = '#e0e0e0';
-                document.getElementById('resourcesBar').style.borderColor = '#4a6a9a';
                 currentTheme = 'light';
             } else {
-                document.body.style.background = 'linear-gradient(135deg, #0a0e17, #0d1220)';
+                document.body.style.background = '#0e121f';
                 document.getElementById('gameContainer').style.background = '#0e121f';
-                document.getElementById('gameContainer').style.borderColor = '#ffd966';
                 document.getElementById('topPanel').style.background = '#141a26';
-                document.getElementById('topPanel').style.borderColor = '#ffd966';
                 document.getElementById('leftMenu').style.background = '#0c111c';
-                document.getElementById('leftMenu').style.borderColor = '#ffd966';
                 document.getElementById('contentPanel').style.background = '#101624';
                 document.getElementById('resourcesBar').style.background = '#141a26';
-                document.getElementById('resourcesBar').style.borderColor = '#ffd966';
                 currentTheme = 'dark';
             }
             showNotification('🎨 Тема изменена');
@@ -725,20 +751,24 @@
         function updateIncome() {
             let income = 0;
             
+            // Доход с бизнесов
             businesses.forEach(business => {
                 if (business.level > 0) {
                     income += business.baseIncome * business.level;
                 }
             });
             
+            // Доход с недвижимости
             properties.forEach(property => {
                 if (property.level > 0) {
                     income += property.income * property.level;
                 }
             });
             
+            // Доход с акций - ИСПРАВЛЕНО!
             stocks.forEach(stock => {
                 if (stock.shares > 0) {
+                    // Дивиденды в секунду: количество * цена * ставка
                     income += stock.shares * stock.price * stock.dividend;
                 }
             });
@@ -782,6 +812,7 @@
 
         function renderBusinesses() {
             const grid = document.getElementById('businesses-grid');
+            if (!grid) return;
             grid.innerHTML = '';
             
             businesses.forEach(business => {
@@ -851,6 +882,7 @@
 
         function renderStocks() {
             const grid = document.getElementById('stocks-grid');
+            if (!grid) return;
             grid.innerHTML = '';
             
             stocks.forEach(stock => {
@@ -859,6 +891,7 @@
                 const changeSign = change >= 0 ? '+' : '';
                 
                 const maxBuy = Math.floor(balance / stock.price);
+                // ДОХОД С АКЦИЙ В СЕКУНДУ
                 const dividendIncome = stock.shares * stock.price * stock.dividend;
                 
                 const card = document.createElement('div');
@@ -917,6 +950,7 @@
 
         function renderRealEstate() {
             const grid = document.getElementById('realestate-grid');
+            if (!grid) return;
             grid.innerHTML = '';
             
             properties.forEach(property => {
@@ -979,6 +1013,7 @@
 
         function renderManagers() {
             const grid = document.getElementById('managers-grid');
+            if (!grid) return;
             grid.innerHTML = '';
             
             managers.forEach(manager => {
@@ -1012,6 +1047,7 @@
             });
         }
 
+        // МИНИ ИГРЫ
         function playGuessGame() {
             if (energy < 10) {
                 showNotification('❌ Мало энергии');
@@ -1077,6 +1113,7 @@
                     clickGameActive = false;
                     const reward = Math.floor(clickCount / 2);
                     crystals += reward;
+                    totalClicks += clickCount;
                     showNotification(`🎉 +${reward}💎 (${clickCount} кликов)`);
                     updateUI();
                 }
@@ -1091,17 +1128,18 @@
 
         function renderMinigames() {
             const grid = document.getElementById('minigames-grid');
+            if (!grid) return;
             grid.innerHTML = `
                 <div class="game-area">
-                    <div style="font-size: 36px;">🎰</div>
-                    <div style="font-size: 22px; color: #ffd966;">УГАДАЙ</div>
+                    <div style="font-size: 32px;">🎰</div>
+                    <div style="font-size: 18px; color: #ffd966;">УГАДАЙ</div>
                     <button class="game-button" onclick="playGuessGame()">🎲</button>
                     <div>⚡10 | 💎1-3</div>
                 </div>
                 
                 <div class="game-area">
-                    <div style="font-size: 36px;">🪙</div>
-                    <div style="font-size: 22px; color: #ffd966;">ОРЛЯНКА</div>
+                    <div style="font-size: 32px;">🪙</div>
+                    <div style="font-size: 18px; color: #ffd966;">ОРЛЯНКА</div>
                     <div>
                         <button class="game-button" onclick="playCoinGame('орел')">🦅</button>
                         <button class="game-button" onclick="playCoinGame('решка')">🪙</button>
@@ -1110,8 +1148,8 @@
                 </div>
                 
                 <div class="game-area">
-                    <div style="font-size: 36px;">⚡</div>
-                    <div style="font-size: 22px; color: #ffd966;">КЛИКЕР</div>
+                    <div style="font-size: 32px;">⚡</div>
+                    <div style="font-size: 18px; color: #ffd966;">КЛИКЕР</div>
                     <button class="game-button" onclick="startClickGame()">🖱️</button>
                     <div>⚡20 | 💎клики/2</div>
                 </div>
@@ -1137,6 +1175,7 @@
 
         function renderQuests() {
             const grid = document.getElementById('quests-grid');
+            if (!grid) return;
             grid.innerHTML = '';
             
             quests.forEach(quest => {
@@ -1179,6 +1218,15 @@
             if (currentSection === 'stocks') renderStocks();
         }
 
+        function renderAll() {
+            renderBusinesses();
+            renderStocks();
+            renderRealEstate();
+            renderManagers();
+            renderMinigames();
+            renderQuests();
+        }
+
         function init() {
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.addEventListener('click', function(e) {
@@ -1211,12 +1259,10 @@
                 });
             });
 
-            renderBusinesses();
-            renderStocks();
-            renderRealEstate();
-            renderManagers();
-            renderMinigames();
-            renderQuests();
+            // Загружаем сохранение при старте
+            loadGame();
+            
+            renderAll();
             updateUI();
 
             setInterval(updateIncome, 1000);
@@ -1224,6 +1270,8 @@
         }
 
         window.toggleTheme = toggleTheme;
+        window.saveGame = saveGame;
+        window.loadGame = loadGame;
         window.buyBusiness = buyBusiness;
         window.buyStock = buyStock;
         window.sellStock = sellStock;
