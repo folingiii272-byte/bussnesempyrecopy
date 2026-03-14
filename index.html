@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BUSINESS EMPIRE: С СОХРАНЕНИЕМ</title>
+    <title>BUSINESS EMPIRE: АВТОСОХРАНЕНИЕ 100МС</title>
     <style>
         * {
             margin: 0;
@@ -458,8 +458,8 @@
                 </div>
             </div>
             <div class="header-buttons">
-                <div class="header-btn" onclick="saveGame()">💾</div>
-                <div class="header-btn" onclick="loadGame()">📂</div>
+                <div class="header-btn" onclick="forceSave()">💾</div>
+                <div class="header-btn" onclick="forceLoad()">📂</div>
                 <div class="header-btn" onclick="toggleTheme()">🎨</div>
             </div>
         </div>
@@ -552,6 +552,10 @@
         let currentTheme = 'dark';
         let totalClicks = 0;
 
+        // Флаг для автосохранения
+        let lastSaveTime = Date.now();
+        let saveCounter = 0;
+
         // БИЗНЕСЫ
         let businesses = [
             { id: 0, name: 'Ларёк', icon: '🏪', baseIncome: 10, level: 0, cost: 500, manager: false },
@@ -566,18 +570,18 @@
             { id: 9, name: 'Галактическая', icon: '👑', baseIncome: 19531250, level: 0, cost: 976562500, manager: false }
         ];
 
-        // АКЦИИ (исправленный dividend)
+        // АКЦИИ (УМЕНЬШЕНО В 3 РАЗА)
         let stocks = [
-            { id: 0, name: 'Apple', icon: '🍎', price: 180, oldPrice: 180, shares: 0, dividend: 0.05 },
-            { id: 1, name: 'Microsoft', icon: '💻', price: 380, oldPrice: 380, shares: 0, dividend: 0.05 },
-            { id: 2, name: 'Google', icon: '🔍', price: 140, oldPrice: 140, shares: 0, dividend: 0.05 },
-            { id: 3, name: 'Amazon', icon: '📦', price: 130, oldPrice: 130, shares: 0, dividend: 0.05 },
-            { id: 4, name: 'Tesla', icon: '🚗', price: 250, oldPrice: 250, shares: 0, dividend: 0.05 },
-            { id: 5, name: 'NVIDIA', icon: '🎮', price: 800, oldPrice: 800, shares: 0, dividend: 0.05 },
-            { id: 6, name: 'Netflix', icon: '📺', price: 450, oldPrice: 450, shares: 0, dividend: 0.05 },
-            { id: 7, name: 'Disney', icon: '🐭', price: 110, oldPrice: 110, shares: 0, dividend: 0.05 },
-            { id: 8, name: 'Coca-Cola', icon: '🥤', price: 60, oldPrice: 60, shares: 0, dividend: 0.05 },
-            { id: 9, name: 'McDonalds', icon: '🍔', price: 280, oldPrice: 280, shares: 0, dividend: 0.05 }
+            { id: 0, name: 'Apple', icon: '🍎', price: 180, oldPrice: 180, shares: 0, dividend: 0.0167 },
+            { id: 1, name: 'Microsoft', icon: '💻', price: 380, oldPrice: 380, shares: 0, dividend: 0.0167 },
+            { id: 2, name: 'Google', icon: '🔍', price: 140, oldPrice: 140, shares: 0, dividend: 0.0167 },
+            { id: 3, name: 'Amazon', icon: '📦', price: 130, oldPrice: 130, shares: 0, dividend: 0.0167 },
+            { id: 4, name: 'Tesla', icon: '🚗', price: 250, oldPrice: 250, shares: 0, dividend: 0.0167 },
+            { id: 5, name: 'NVIDIA', icon: '🎮', price: 800, oldPrice: 800, shares: 0, dividend: 0.0167 },
+            { id: 6, name: 'Netflix', icon: '📺', price: 450, oldPrice: 450, shares: 0, dividend: 0.0167 },
+            { id: 7, name: 'Disney', icon: '🐭', price: 110, oldPrice: 110, shares: 0, dividend: 0.0167 },
+            { id: 8, name: 'Coca-Cola', icon: '🥤', price: 60, oldPrice: 60, shares: 0, dividend: 0.0167 },
+            { id: 9, name: 'McDonalds', icon: '🍔', price: 280, oldPrice: 280, shares: 0, dividend: 0.0167 }
         ];
 
         // НЕДВИЖИМОСТЬ
@@ -617,6 +621,51 @@
             { id: 4, name: 'Нанять 3 менеджеров', requirement: 3, progress: 0, reward: 15, rewardType: 'crystals', completed: false }
         ];
 
+        // ФУНКЦИЯ АВТОСОХРАНЕНИЯ (каждые 100мс)
+        function autoSave() {
+            try {
+                const saveData = {
+                    balance: balance,
+                    crystals: crystals,
+                    energy: energy,
+                    maxEnergy: maxEnergy,
+                    level: level,
+                    exp: exp,
+                    expToNextLevel: expToNextLevel,
+                    totalClicks: totalClicks,
+                    businesses: businesses,
+                    stocks: stocks,
+                    properties: properties,
+                    managers: managers,
+                    quests: quests
+                };
+                
+                localStorage.setItem('businessEmpireSave', JSON.stringify(saveData));
+                saveCounter++;
+                
+                // Показываем уведомление каждые 100 сохранений (примерно раз в 10 секунд)
+                if (saveCounter % 100 === 0) {
+                    console.log('Автосохранение:', saveCounter);
+                }
+            } catch (e) {
+                console.error('Ошибка автосохранения:', e);
+            }
+        }
+
+        // ЗАПУСК АВТОСОХРАНЕНИЯ КАЖДЫЕ 100 МИЛЛИСЕКУНД
+        setInterval(autoSave, 100);
+
+        // ПРИНУДИТЕЛЬНОЕ СОХРАНЕНИЕ (кнопка)
+        function forceSave() {
+            autoSave();
+            showNotification('💾 Игра сохранена');
+        }
+
+        // ПРИНУДИТЕЛЬНАЯ ЗАГРУЗКА (кнопка)
+        function forceLoad() {
+            loadGame();
+        }
+
         // ЗАГРУЗКА ПРИ СТАРТЕ
         function loadGame() {
             try {
@@ -642,6 +691,8 @@
                     // Акции
                     if (data.stocks) {
                         stocks = data.stocks;
+                        // Восстанавливаем oldPrice для корректного отображения изменений
+                        stocks.forEach(s => s.oldPrice = s.price);
                     }
                     
                     // Недвижимость
@@ -662,41 +713,17 @@
                     showNotification('📂 Игра загружена');
                     updateUI();
                     renderAll();
+                    return true;
+                } else {
+                    showNotification('🆕 Новая игра');
+                    return false;
                 }
             } catch (e) {
                 console.error('Ошибка загрузки:', e);
+                showNotification('❌ Ошибка загрузки');
+                return false;
             }
         }
-
-        // СОХРАНЕНИЕ
-        function saveGame() {
-            try {
-                const saveData = {
-                    balance,
-                    crystals,
-                    energy,
-                    maxEnergy,
-                    level,
-                    exp,
-                    expToNextLevel,
-                    totalClicks,
-                    businesses,
-                    stocks,
-                    properties,
-                    managers,
-                    quests
-                };
-                
-                localStorage.setItem('businessEmpireSave', JSON.stringify(saveData));
-                showNotification('💾 Игра сохранена');
-            } catch (e) {
-                console.error('Ошибка сохранения:', e);
-                showNotification('❌ Ошибка сохранения');
-            }
-        }
-
-        // АВТОСОХРАНЕНИЕ КАЖДЫЕ 30 СЕКУНД
-        setInterval(saveGame, 30000);
 
         function toggleTheme() {
             if (currentTheme === 'dark') {
@@ -751,24 +778,20 @@
         function updateIncome() {
             let income = 0;
             
-            // Доход с бизнесов
             businesses.forEach(business => {
                 if (business.level > 0) {
                     income += business.baseIncome * business.level;
                 }
             });
             
-            // Доход с недвижимости
             properties.forEach(property => {
                 if (property.level > 0) {
                     income += property.income * property.level;
                 }
             });
             
-            // Доход с акций - ИСПРАВЛЕНО!
             stocks.forEach(stock => {
                 if (stock.shares > 0) {
-                    // Дивиденды в секунду: количество * цена * ставка
                     income += stock.shares * stock.price * stock.dividend;
                 }
             });
@@ -891,7 +914,6 @@
                 const changeSign = change >= 0 ? '+' : '';
                 
                 const maxBuy = Math.floor(balance / stock.price);
-                // ДОХОД С АКЦИЙ В СЕКУНДУ
                 const dividendIncome = stock.shares * stock.price * stock.dividend;
                 
                 const card = document.createElement('div');
@@ -1270,8 +1292,8 @@
         }
 
         window.toggleTheme = toggleTheme;
-        window.saveGame = saveGame;
-        window.loadGame = loadGame;
+        window.forceSave = forceSave;
+        window.forceLoad = forceLoad;
         window.buyBusiness = buyBusiness;
         window.buyStock = buyStock;
         window.sellStock = sellStock;
